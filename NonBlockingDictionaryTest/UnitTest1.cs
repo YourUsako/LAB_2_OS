@@ -13,50 +13,50 @@ namespace NonBlockingDictionaryTest
         [TestMethod]
         public void Contains()
         {
-            var testDictionary = new NonBlockingDictionary<int, String>();
-            Assert.IsTrue(testDictionary.Empty());
+            var testQueue = new NonBlockingQueue<int>();
+            Assert.IsTrue(testQueue.Empty());
         }
         [TestMethod]
         public void Push()
         {
-            var testDictionary = new NonBlockingDictionary<int, String>();
-            testDictionary.Push(1, "first");
-            Assert.IsFalse(testDictionary.Empty());
+            var testQueue = new NonBlockingQueue<int>();
+            testQueue.Push(1);
+            Assert.IsFalse(testQueue.Empty());
         }
         [TestMethod]
         public void Pop()
         {
-            var testDictionary = new NonBlockingDictionary<int, String>();
-            testDictionary.Push(1, "first");
-            testDictionary.Push(2, "second");
-            testDictionary.Push(3, "third");
-            String result = testDictionary.Pop(3);
-            String expected = "third";
+            var testQueue = new NonBlockingQueue<int>();
+            testQueue.Push(1);
+            testQueue.Push(2);
+            testQueue.Push(3);
+            int result = testQueue.Pop();
+            int expected = 1;
             StringAssert.Equals(expected, result);
         }
         [TestMethod]
         public void Peek()
         {
-            var testDictionary = new NonBlockingDictionary<int, String>();
-            testDictionary.Push(1, "first");
-            testDictionary.Push(2, "second");
-            testDictionary.Push(3, "third");
-            String result = testDictionary.Peek();
-            String expected = "first";
+            var testQueue = new NonBlockingQueue<int>();
+            testQueue.Push(3);
+            testQueue.Push(2);
+            testQueue.Push(1);
+            int result = testQueue.Peek();
+            int expected = 3;
             StringAssert.Equals(expected, result);
         }
         [TestMethod]
         public void NonBlockingDictionaryTesting()
         {
-            var testDictionary = new NonBlockingDictionary<int, String>();
+            var testQueue = new NonBlockingQueue<int>();
             var ints = Enumerable.Range(0, 10000).ToArray();
-            Parallel.ForEach(ints, k => { testDictionary.Push( k, "i=" + k); });
+            Parallel.ForEach(ints, k => { testQueue.Push(k); });
             int ok = 0, notOk = 0;
             Parallel.ForEach(ints, k =>
             {
                 try
                 {
-                    testDictionary.Pop(k);
+                    testQueue.Pop();
                     Interlocked.Increment(ref ok);
                 }
                 catch (Exception e)

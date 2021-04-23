@@ -8,74 +8,76 @@ namespace labOS2
     public class Program
     {
 
-        public class NonBlockingDictionary<TKey, TValue> where TValue : class
+        public class NonBlockingQueue<TValue> 
 
         {
-            private Dictionary<TKey, TValue> _nonSyncDictionary = new Dictionary<TKey, TValue>();
+            private Queue<TValue> _nonSyncQueue = new Queue<TValue>();
 
-            private void Update(Func<Dictionary<TKey, TValue>, Dictionary<TKey, TValue>> newDict)
+            private void Update(Func<Queue<TValue>, Queue<TValue>> newQueue)
             {
-                Dictionary<TKey, TValue> old;
-                Dictionary<TKey, TValue> updated;
+                Queue<TValue> old;
+                Queue<TValue> updated;
                 do
                 {
-                    old = _nonSyncDictionary;
-                    updated = newDict.Invoke(old);
+                    old = _nonSyncQueue;
+                    updated = newQueue.Invoke(old);
                 } while (Interlocked.CompareExchange
-                    (ref _nonSyncDictionary, updated, old) != old);
+                    (ref _nonSyncQueue, updated, old) != old);
 
             }
 
+            
 
-            public void Push(TKey key, TValue value)
-            {
-                Update(
-                    dict => new Dictionary<TKey, TValue>(_nonSyncDictionary)
-                    { [key] = value }
-                );
+            public void Push(TValue value)
+            {               
+                Update(queue =>
+                {
+                    var updated = new Queue<TValue>(queue);
+                    updated.Enqueue(value);
+                    return updated;
+                }) ;
+                
             }
 
 
-            public TValue Pop(TKey key)
+            public TValue Pop()
             {
-                var modifiedDict = new Dictionary<TKey, TValue>(_nonSyncDictionary);
-                return modifiedDict[key];
+                var modifiedQueue = new Queue<TValue>(_nonSyncQueue);
+                Update(queue =>
+                {
+                    var updated = new Queue<TValue>(queue);
+                    updated.Dequeue();
+                    return updated;
+                });
+                return modifiedQueue.Dequeue();
             }
 
 
-            public bool Contains(TKey key)
+            public bool Contains(TValue value)
             {
-                return Pop(key) != null;
+                var modifiedQueue  = new Queue<TValue>(_nonSyncQueue);
+                return modifiedQueue .Contains(value);
             }
 
             public bool Empty()
             {
-                var modifiedDict = new Dictionary<TKey, TValue>(_nonSyncDictionary);
-                if (modifiedDict.Count == 0)
+                var modifiedQueue = new Queue<TValue>(_nonSyncQueue);
+                if (modifiedQueue.Count == 0)
                     return true;
                 else return false;
             }
 
             public TValue Peek()
             {
-                var modifiedDict = new Dictionary<TKey, TValue>(_nonSyncDictionary);
-                if (!Empty())
-                {
-                    var first = modifiedDict.First();
-                    return first.Value;
-                }
-                else return null;
-
+                var modifiedQueue = new Queue<TValue>(_nonSyncQueue);                      
+                return modifiedQueue.Peek();
+               
             }
 
         }
         static void Main(string[] args)
-        {
-            var testDictionary = new NonBlockingDictionary<int, String>();
-            testDictionary.Push(1, "first");
-            testDictionary.Push(2, "second");
-            testDictionary.Push(3, "third");
-            Console.WriteLine(testDictionary.Peek());
+        {           
+          
         }
     }
 }
