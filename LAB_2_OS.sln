@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAB_2_OS", "LAB_2_OS\LAB_2_OS.csproj", "{14FBE3FD-D26A-4B1E-918C-3569E933ABED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NonBlockingDictionaryTest", "NonBlockingDictionaryTest\NonBlockingDictionaryTest.csproj", "{7E430012-54FA-413A-8CD0-BF4F8EFE9CA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NonBlockingQueueTest", "NonBlockingDictionaryTest\NonBlockingQueueTest.csproj", "{7E430012-54FA-413A-8CD0-BF4F8EFE9CA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

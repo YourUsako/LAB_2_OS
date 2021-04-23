@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static labOS2.Program;
 
-namespace NonBlockingDictionaryTest
+namespace NonBlockingQueueTest
 {
     [TestClass]
     public class UnitTest1
@@ -46,7 +46,7 @@ namespace NonBlockingDictionaryTest
             StringAssert.Equals(expected, result);
         }
         [TestMethod]
-        public void NonBlockingDictionaryTesting()
+        public void NonBlockingQueueTesting()
         {
             var testQueue = new NonBlockingQueue<int>();
             var ints = Enumerable.Range(0, 10000).ToArray();
